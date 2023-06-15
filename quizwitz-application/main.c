@@ -32,6 +32,7 @@ void techr();
 void humanr();
 void currentr();
 int randques();
+int check(char *u);
 
 #define clrscr() system("clear")
 #define getchar() system("read -n 1 -s -r");
@@ -48,7 +49,6 @@ struct data
 
 struct data d;
 
-int check(char *u);
 //indicates the start of the program
 void start()
 {
@@ -154,8 +154,8 @@ void signup()
                 {
                     FILE *fp;
                     fp = fopen("userdata.txt", "a");
-                    fprintf(fp, "%s\t\t", d.username);
-                    fprintf(fp, "%s\t\t", d.name);
+                    fprintf(fp, "%s ", d.username);
+                    fprintf(fp, "%s ", d.name);
                     fprintf(fp, "%s\n", d.pass);
                     fclose(fp);
                     printf("Account successfully created.\n");
@@ -221,7 +221,7 @@ void login()
       strcpy(s1, "");
       strcpy(p, "");
       printf("Press any key to try again\n");
-      getchar()
+      getchar();
       login();
     }
     else
@@ -239,17 +239,19 @@ int search(char u[], char p[])
     char user[20], pwd[20];
     FILE *fp;
     fp = fopen("userdata.txt", "r");
-    while(fscanf(fp, "%s %*s %*s", user) ==1 )
+    while (fscanf(fp, "%s", user) == 1)
     {
-        if (strcmp(u, user)==0)
+        if (strcmp(u, user) == 0)
         {
-            while(fscanf(fp, "%*s %*s %s", pwd) == 1) 
+            fscanf(fp, "%*s %s", pwd); // Read the password directly after reading the username
+            if (strcmp(p, pwd) == 0)
             {
-                if (strcmp(p, pwd)==0)
-                    return 1;
+                fclose(fp);
+                return 1;
             }
         }
     }
+    fclose(fp);
     return 0;
 }
 
